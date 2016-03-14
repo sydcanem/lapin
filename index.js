@@ -53,6 +53,10 @@ function hasMultipleOptions ( options ) {
 		return true;
 	}
 
+	if ( _.has( options, 'zipkin' ) ) {
+		return true;
+	}
+
 	return false;
 }
 
@@ -64,9 +68,11 @@ function setConfigs ( options ) {
 
 	config.rabbit  = options;
 	config.timeout.setOptions( options.timeout );
+
 	if ( hasMultipleOptions( options ) ) {
 		config.rabbit = options.rabbit;
 		config.logger = options.logger;
+		config.zipkin = options.zipkin;
 	}
 
 	if ( !options || !config.rabbit  ) {
@@ -78,8 +84,9 @@ function setConfigs ( options ) {
 module.exports = function ( options ) {
 	if ( !lapin ) {
 		setConfigs( options );
-		lapin = new Lapin( options );
+		lapin = new Lapin();
 	}
+
 	return lapin;
 };
 
